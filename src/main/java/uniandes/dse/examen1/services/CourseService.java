@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import uniandes.dse.examen1.entities.CourseEntity;
 import uniandes.dse.examen1.exceptions.RepeatedCourseException;
@@ -16,8 +17,14 @@ public class CourseService {
 
     @Autowired
     CourseRepository courseRepository;
-
+    
+    @Transactional
     public CourseEntity createCourse(CourseEntity newCourse) throws RepeatedCourseException {
-        // TODO
+        log.info("Creacion de curso{}", newCourse.getCourseCode());
+        Optional<CourseEntity> course = courseRepository.findByCourseCode(newCourse.getCourseCode());
+        if (course.isPresent()) {
+            throw new RepeatedCourseException("Ya existe");
+        }
+        return courseRepository.save(newCourse);
     }
 }
