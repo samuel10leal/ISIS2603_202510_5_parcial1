@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import uk.co.jemos.podam.common.PodamExclude;
@@ -27,15 +28,13 @@ public class RecordEntity {
      */
     private String semester;
 
-    /**
-     * The course that the student took
-     */
     @PodamExclude
-    @ManyToOne
-    private CourseEntity course;
-
-    @PodamExclude
-    @ManyToOne
+    @ManyToOne(optional = false)
     private StudentEntity student;
+
+    
+    @PodamExclude
+    @ManyToOne(optional = false)
+    private CourseEntity course;
 
 }

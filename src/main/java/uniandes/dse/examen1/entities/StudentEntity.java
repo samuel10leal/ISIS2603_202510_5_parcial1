@@ -31,19 +31,12 @@ public class StudentEntity {
      */
     private String name;
 
-    /**
-     * A list of the records of courses that the student has taken so far.
-     * Each record indicates the semester, the course, and the final grade of the
-     * student in the course.
-     */
+    
     @PodamExclude
     @OneToMany(mappedBy = "student")
     private List<RecordEntity> records = new ArrayList<>();
 
-    /**
-     * A list of all the courses that the student has ever taken. No course should
-     * appear more than once in this list.
-     */
+    
     @PodamExclude
     @ManyToMany(mappedBy = "students")
     private List<CourseEntity> course = new ArrayList<>();

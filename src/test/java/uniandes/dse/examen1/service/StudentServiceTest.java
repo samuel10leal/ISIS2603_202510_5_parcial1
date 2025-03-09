@@ -43,9 +43,9 @@ public class StudentServiceTest {
         try {
             StudentEntity storedEntity = studentService.createStudent(newEntity);
             StudentEntity retrieved = entityManager.find(StudentEntity.class, storedEntity.getId());
-            assertEquals(login, retrieved.getLogin(), "The login is not correct");
+            assertEquals(login, retrieved.getLogin(), "El login no es correcto");
         } catch (RepeatedStudentException e) {
-            fail("No exception should be thrown: " + e.getMessage());
+            fail("No deberia lanzarse ninguan excepcion" + e.getMessage());
         }
     }
 
@@ -56,12 +56,12 @@ public class StudentServiceTest {
 
         StudentEntity repeatedEntity = new StudentEntity();
         repeatedEntity.setLogin(login);
-        repeatedEntity.setName("repeated name");
+        repeatedEntity.setName("nombre repetido");
 
         try {
             studentService.createStudent(firstEntity);
             studentService.createStudent(repeatedEntity);
-            fail("An exception must be thrown");
+            fail("Deberia lanzar excepcion");
         } catch (Exception e) {
         }
     }

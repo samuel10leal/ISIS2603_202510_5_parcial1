@@ -2,12 +2,12 @@ package uniandes.dse.examen1.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import lombok.extern.slf4j.Slf4j;
+import uniandes.dse.examen1.entities.CourseEntity;
 import uniandes.dse.examen1.entities.RecordEntity;
+import uniandes.dse.examen1.entities.StudentEntity;
 import uniandes.dse.examen1.repositories.CourseRepository;
 import uniandes.dse.examen1.repositories.StudentRepository;
-import uniandes.dse.examen1.repositories.RecordRepository;
 
 import java.util.List;
 
@@ -16,37 +16,43 @@ import java.util.List;
 public class StatsService {
 
     @Autowired
-    StudentRepository studentRepository;
+    StudentRepository estudianteRepository;
 
     @Autowired
-    CourseRepository courseRepository;
-
-    @Autowired
-    RecordRepository recordRepository;
+    CourseRepository cursoRepository;
 
     public Double calculateStudentAverage(String login) {
-        List<RecordEntity> records = recordRepository.findByStudentLogin(login);
-        if (records.isEmpty()) {
-            return null; // or return 0.0 if you prefer
-        }
+        log.info("Calculating average for student: {}", login);
+
+        StudentEntity student = estudianteRepository.findByLogin(login).orElse(null);
+        if (student == null) return 0.0;
+
+        List<RecordEntity> records = student.getRecords();
+        if (records.isEmpty()) return 0.0;
 
         double sum = 0;
         for (RecordEntity record : records) {
             sum += record.getFinalGrade();
         }
+
         return sum / records.size();
     }
 
     public Double calculateCourseAverage(String courseCode) {
-        List<RecordEntity> records = recordRepository.findByCourseCode(courseCode);
-        if (records.isEmpty()) {
-            return null; // or return 0.0 if you prefer
-        }
+        log.info("Calculating average for course: {}", courseCode);
+
+        CourseEntity course = cursoRepository.findByCourseCode(courseCode).orElse(null);
+        if (course == null) return 0.0;
+
+        List<RecordEntity> records = course.getRecords();
+        if (records.isEmpty()) return 0.0;
 
         double sum = 0;
         for (RecordEntity record : records) {
             sum += record.getFinalGrade();
         }
+
         return sum / records.size();
     }
 }
+

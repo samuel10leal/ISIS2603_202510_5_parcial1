@@ -60,9 +60,9 @@ public class CourseServiceTest {
         try {
             courseService.createCourse(firstEntity);
             courseService.createCourse(repeatedEntity);
-            fail("An exception should be thrown");
+            fail("Deberia haber lanzado excepcion");
         } catch (RepeatedCourseException e) {
-            assertEquals("Ya existe", e.getMessage(), "The exception message is not correct");
+            assertEquals("Ya existe", e.getMessage(), "El mensaje de la excepcion no es correcto");
         }
     }
 }

@@ -20,10 +20,10 @@ public class StudentService {
 
     @Transactional
     public StudentEntity createStudent(StudentEntity newStudent) throws RepeatedStudentException {
-        log.info("Creacion de estudiante");
-        Optional<StudentEntity> student = studentRepository.findByLogin(newStudent.getLogin());
-        if (student.isPresent()) {
-            throw new RepeatedStudentException("Ya existe");
+        log.info("Creating student with login: {}", newStudent.getLogin());
+
+        if (studentRepository.findByLogin(newStudent.getLogin()).isPresent()) {
+            throw new RepeatedStudentException("A student with this login already exists.");
         }
         return studentRepository.save(newStudent);
     }

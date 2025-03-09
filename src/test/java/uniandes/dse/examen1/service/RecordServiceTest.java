@@ -63,53 +63,65 @@ public class RecordServiceTest {
         login = newStudent.getLogin();
     }
 
-    /**
-     * Tests the normal creation of a record for a student in a course
-     */
     @Test
-    void testCreateRecord() {
-       
+void testCreateRecord() {
+    try {
+        RecordEntity record = recordService.createRecord(login, courseCode, 4.0, "2025-1");
+        assertEquals(4.0, record.getFinalGrade(), "Debe tener la misma nota");
+    } catch (InvalidRecordException e) {
+        fail("No deberia lanzarse ninguna excepcion " + e.getMessage());
     }
+}
 
-    /**
-     * Tests the creation of a record when the login of the student is wrong
-     */
-    @Test
-    void testCreateRecordMissingStudent() {
-        // TODO
+@Test
+void testCreateRecordMissingStudent() {
+    try {
+        recordService.createRecord("login incorrecto", courseCode, 4.0, "2025-1");
+        fail("Deberia haber una excepcion");
+    } catch (InvalidRecordException e) {
+        assertEquals("No existe el estudiante", e.getMessage(), "El mensaje de la excepcion no es correcto");
     }
+}
 
-    /**
-     * Tests the creation of a record when the course code is wrong
-     */
-    @Test
-    void testCreateInscripcionMissingCourse() {
-        // TODO
+@Test
+void testCreateInscripcionMissingCourse() {
+    try {
+        recordService.createRecord(login, "curso incorrecto", 4.0, "2025-1");
+        fail("Deberia haber una excepcion");
+    } catch (InvalidRecordException e) {
+        assertEquals("No existe el curso", e.getMessage(), "El mensaje de la excepcion no es correcto");
     }
+}
 
-    /**
-     * Tests the creation of a record when the grade is not valid
-     */
-    @Test
-    void testCreateInscripcionWrongGrade() {
-        // TODO
+@Test
+void testCreateInscripcionWrongGrade() {
+    try {
+        recordService.createRecord(login, courseCode, 1.0, "2025-1"); // Nota inválida
+        fail("Deberia haber una excepcion");
+    } catch (InvalidRecordException e) {
+        assertEquals("La nota debe estar entre 1.5 y 5", e.getMessage(), "El mensaje de la excepcion no es correcto");
     }
+}
 
-    /**
-     * Tests the creation of a record when the student already has a passing grade
-     * for the course
-     */
-    @Test
-    void testCreateInscripcionRepetida1() {
-        // TODO
+@Test
+void testCreateInscripcionRepetida1() {
+    try {
+        recordService.createRecord(login, courseCode, 3.5, "2025-1"); // Nota aprobatoria
+        recordService.createRecord(login, courseCode, 4.0, "2025-2");
+        fail("An exception should be thrown");
+    } catch (InvalidRecordException e) {
+        assertEquals("El estudiante ya ha aprobado el curso", e.getMessage(), "The exception message should match");
     }
+}
 
-    /**
-     * Tests the creation of a record when the student already has a record for the
-     * course, but he has not passed the course yet.
-     */
-    @Test
-    void testCreateInscripcionRepetida2() {
-        // TODO
+@Test
+void testCreateInscripcionRepetida2() {
+    try {
+        recordService.createRecord(login, courseCode, 2.5, "2025-1"); // No aprobó
+        RecordEntity record = recordService.createRecord(login, courseCode, 3.0, "2025-2");
+        assertEquals(3.0, record.getFinalGrade(), "La nota debe ser 3.0");
+    } catch (InvalidRecordException e) {
+        fail("No exception should be thrown: " + e.getMessage());
     }
+}
 }

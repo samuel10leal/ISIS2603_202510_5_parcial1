@@ -37,12 +37,13 @@ public class CourseEntity {
      */
     private Integer credits;
 
-    /**
-     * A list with the students that have been enrolled in this course.
-     * No student should appear more than once in this list
-     */
     @PodamExclude
-	@OneToMany(mappedBy = "course", fetch = FetchType.LAZY)
+    @ManyToMany
     private List<StudentEntity> students = new ArrayList<>();
+
+    
+    @PodamExclude
+    @OneToMany(mappedBy = "course")
+    private List<RecordEntity> records = new ArrayList<>();
 
 }
